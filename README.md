@@ -68,7 +68,7 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 - [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
 
 
-<!-- Instalación y Configuración 
+Instalación y Configuración 
 
 1. git clone https://github.com/sebaspro-sys/epicoCrud 
 
@@ -88,6 +88,4 @@ El proyecto estará disponible en: http://localhost:8080
 php spark migrate
 
 LISTO, YA PUEDES USAR EL PROYECTO
-
--->
 
