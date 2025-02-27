@@ -76,11 +76,11 @@ Instalación y Configuración
 
 ejemplo: C:\xampp\htdocs\epicoCrud>
 
-3.una ves estes en la carpeta del proyecto debes ejecutar el comando composer install para descargar las dependencias
+3. Una ves estes en la carpeta del proyecto debes ejecutar el comando composer install para descargar las dependencias
 
-6.crea una base de datos en phpMyAdmin
+6. Crea una base de datos en phpMyAdmin
 
-5. en el archivo database encontrado en la ruta app/config/Database.php configura el nombre de la base de datos que creaste
+5. En el archivo database encontrado en la ruta app/config/Database.php configura el nombre de la base de datos que creaste
 
 6.Inicializa el servidor con el comando php spark serve
 El proyecto estará disponible en: http://localhost:8080
