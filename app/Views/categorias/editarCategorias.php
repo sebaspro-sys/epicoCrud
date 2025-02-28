@@ -14,7 +14,7 @@
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-3">
-                    <a href="<?= base_url('consultarCategorias') ?>" class="btn btn-warning">Consultar categorias</a>
+                    <a href="<?= base_url('consultarCategorias') ?>" class="btn btn-primary">Consultar categorias</a>
                 </div>
                 <div class="container">
                     <form action="<?= base_url('actualizarCategoria') ?>" method="post">

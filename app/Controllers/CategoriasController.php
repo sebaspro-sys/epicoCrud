@@ -64,9 +64,9 @@ class CategoriasController extends BaseController
         $items = $itemModel->where('category_id', $id)->findAll();
         // se debe recorrer los items para eliminar las imagenes relacionadas tambien
         foreach ($items as $item) {
-            $imagenPath = ROOTPATH . 'public/uploads/' . $item['pic_filename'];
-            if (is_file($imagenPath)) {
-                unlink($imagenPath);
+            $imagenRuta = ROOTPATH . 'public/uploads/' . $item['pic_filename'];
+            if (is_file($imagenRuta)) {
+                unlink($imagenRuta);
             }
         }
 
@@ -89,11 +89,15 @@ class CategoriasController extends BaseController
         
         $model = new CategoriaModel();
 
+        $id = $this->request->getPost('categoriaId');
         $nombre = trim($this->request->getPost('categoriaNombre'));
         // lo convertimos a minuscula para poder comparar mejor
         $nombreNormalizado = strtolower($nombre);
 
-        $id = $this->request->getPost('categoriaId');
+        // validamos que llegue el nombre de la categoria
+        if($nombreNormalizado == ""){
+            return redirect()->to(base_url('editarCategorias/' . $id))->with('error', 'El campo categoria es obligatorio');
+        }
 
         // validamos que no se pueda editar la categoria con una que ya existe
         $existe = $model
