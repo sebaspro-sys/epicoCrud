@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container mt-4">
-        <div class="card">
+        <div class="card shadow-lg">
             <div class="card-header bg-dark text-white text-center">
                 <h2>Registrar Items</h2>
             </div>
