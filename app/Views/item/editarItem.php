@@ -60,6 +60,12 @@
                             </div>
                         </div>
                     </form>
+
+                    <?php if(session()->getFlashdata('error')): ?>
+                        <div class="alert alert-danger mt-2">
+                            <?= session()->getFlashdata('error'); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

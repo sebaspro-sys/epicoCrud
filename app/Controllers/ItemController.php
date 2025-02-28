@@ -109,7 +109,7 @@ class ItemController extends BaseController
 
         // realizamos las validaciones
         if($nombre == "" || $categoriaId == 0 || $precioCosto == "" || !is_numeric($precioCosto) || $precioUnitario == "" || !is_numeric($precioUnitario)){
-            return redirect()->to(base_url('registrarItems'))->with('error', 'Por favor llene todos los campos');
+            return redirect()->to(base_url('editarItem/'.$id))->with('error', 'Por favor llene todos los campos');
         }
 
         $item = $model->find($id);
