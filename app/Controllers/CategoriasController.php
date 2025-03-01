@@ -9,11 +9,19 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class CategoriasController extends BaseController
 {
+
+    protected $modelCategoria;
+    protected $modelItem;
+    
+    public function __construct()
+    {
+        $this->modelCategoria = new CategoriaModel();
+        $this->modelItem = new ItemModel();
+    }
+
     public function consultarCategorias()
     {
-        $model = new CategoriaModel();
-        $data['categorias'] = $model->findAll();
-
+        $data['categorias'] = $this->modelCategoria->findAll();
         return view('categorias/consultarCategorias', $data);
     }
 
@@ -22,8 +30,6 @@ class CategoriasController extends BaseController
     }
 
     public function guardarCategorias(){
-
-        $model = new CategoriaModel();
 
         // usamos el trim para quitar espacios en la catgoria que se envie
         $nombre = trim($this->request->getPost('categoriaNombre'));
@@ -36,32 +42,28 @@ class CategoriasController extends BaseController
         }
 
         // Igualmente validamos en la base de datos con los que ya estan registrados con el nameNormalizado
-        $existe = $model->where('LOWER(TRIM(name))', $nombreNormalizado)->first();
+        $existe = $this->modelCategoria->where('LOWER(TRIM(name))', $nombreNormalizado)->first();
 
         if ($existe) {
             return redirect()->to(base_url('registrarCategorias'))->with('error', 'La categoría ya existe.');
         }
 
         $data = ['name' => $nombre];
-        $model->insert($data);
+        $this->modelCategoria->insert($data);
 
         return redirect()->to(base_url('registrarCategorias'))->with('success', 'Categoría guardada correctamente.');
     }
 
     public function eliminarCategorias($id){
 
-        // instanciamos el modelo
-        $categoriaModel = new CategoriaModel();
-        $itemModel = new ItemModel(); 
-
-        $categoria = $categoriaModel->find($id);
+        $categoria = $this->modelCategoria->find($id);
 
         if (!$categoria) {
             return redirect()->to(base_url('consultarCategorias'))->with('error', 'La categoría no existe.');
         }
         
         // obtenemos todos los items con esa categoria
-        $items = $itemModel->where('category_id', $id)->findAll();
+        $items = $this->modelItem->where('category_id', $id)->findAll();
         // se debe recorrer los items para eliminar las imagenes relacionadas tambien
         foreach ($items as $item) {
             $imagenRuta = ROOTPATH . 'public/uploads/' . $item['pic_filename'];
@@ -70,7 +72,7 @@ class CategoriasController extends BaseController
             }
         }
 
-        $categoriaModel->delete($id);
+        $this->modelCategoria->delete($id);
 
         return redirect()->to(base_url('consultarCategorias'))->with('success', 'Categoría eliminada correctamente.');
 
@@ -78,17 +80,13 @@ class CategoriasController extends BaseController
 
     public function editarCategorias($id){
 
-        $model = new CategoriaModel();
-
-        $data['categorias'] = $model->where('id', $id)->first();
+        $data['categorias'] = $this->modelCategoria->where('id', $id)->first();
 
         return view('categorias/editarCategorias', $data); 
     }
 
     public function actualizarCategoria(){
         
-        $model = new CategoriaModel();
-
         $id = $this->request->getPost('categoriaId');
         $nombre = trim($this->request->getPost('categoriaNombre'));
         // lo convertimos a minuscula para poder comparar mejor
@@ -100,7 +98,7 @@ class CategoriasController extends BaseController
         }
 
         // validamos que no se pueda editar la categoria con una que ya existe
-        $existe = $model
+        $existe = $this->modelCategoria
             ->where('LOWER(TRIM(name))', $nombreNormalizado)
             ->where('id !=', $id)
             ->first();
@@ -109,7 +107,7 @@ class CategoriasController extends BaseController
             return redirect()->to(base_url('editarCategorias/' . $id))->with('error', 'Ya existe una categoría con este nombre.');
         } 
 
-        $model->update($id, ['name' => $nombre]);
+        $this->modelCategoria->update($id, ['name' => $nombre]);
 
         return redirect()->to(base_url('consultarCategorias'))->with('success', 'Categoría actualizada correctamente.');
     }

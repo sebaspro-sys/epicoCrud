@@ -9,19 +9,24 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class ItemController extends BaseController
 {
+    protected $modelCategoria;
+    protected $modelItem;
+
+    public function __construct()
+    {
+        $this->modelCategoria = new CategoriaModel();
+        $this->modelItem = new ItemModel();
+    }
+
     public function registrarItem()
     {
         // enviamos las categorias para registrarlas
-        $model = new CategoriaModel();
-        $data['categorias'] = $model->findAll();
-
+        $data['categorias'] = $this->modelCategoria->findAll();
         return view('item/registrarItem', $data);
     }
 
     public function guardarItem()
     {
-        $model = new ItemModel();
-
         $nombre = trim($this->request->getPost('categoriaNombre'));
         $categoriaId = intval($this->request->getPost('categoriaId'));
         $precioCosto = $this->request->getPost('precioCosto');
@@ -57,17 +62,15 @@ class ItemController extends BaseController
             'pic_filename' => $nombreImagen,
         ];
 
-        $model->insert($datosItem);
+        $this->modelItem->insert($datosItem);
 
         return redirect()->to(base_url('/'))->with('success', 'Item guardado exitosamente.');
     }
 
     public function eliminarItem($id){
 
-        // instanciamos el modelo
-        $model = new ItemModel();
+        $item = $this->modelItem->find($id);
 
-        $item = $model->find($id);
         if (!$item) {
             return redirect()->to(base_url('/'))->with('error', 'El item no existe.');
         }
@@ -79,25 +82,20 @@ class ItemController extends BaseController
             unlink($imagenItem);
         }
 
-        $model->delete($id);
+        $this->modelItem->delete($id);
 
         return redirect()->to(base_url('/'))->with('success', 'Item eliminado correctamente.');
     }
 
     public function editarItem($id){
 
-        $model = new ItemModel();
-        $modelCategorias = new CategoriaModel();
-
-        $data['items'] = $model->mostrarCategoria($id);
-        $data['categorias'] = $modelCategorias->findAll();
+        $data['items'] = $this->modelItem->mostrarCategoria($id);
+        $data['categorias'] = $this->modelCategoria->findAll();
 
         return view('item/editarItem', $data); 
     }
 
     public function actualizarItem(){
-
-        $model = new ItemModel();
 
         $id = $this->request->getPost('itemId');
         $nombre = trim($this->request->getPost('categoriaNombre'));
@@ -112,7 +110,7 @@ class ItemController extends BaseController
             return redirect()->to(base_url('editarItem/'.$id))->with('error', 'Por favor llene todos los campos');
         }
 
-        $item = $model->find($id);
+        $item = $this->modelItem->find($id);
         if ($imagen->isValid()) {
             $imagenItem = ROOTPATH . 'public/uploads/' . $item['pic_filename'];
         
@@ -141,7 +139,7 @@ class ItemController extends BaseController
             'pic_filename' => $nombreImagen
         ];
         
-        $model->update($id, $data);
+        $this->modelItem->update($id, $data);
 
         return redirect()->to(base_url('/'))->with('success', 'Item actualizado correctamente.');
     }
